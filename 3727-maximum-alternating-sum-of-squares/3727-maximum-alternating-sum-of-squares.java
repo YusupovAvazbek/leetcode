@@ -1,23 +1,27 @@
 class Solution {
     public long maxAlternatingSum(int[] nums) {
-        int n = nums.length;
-        long[] sq = new long[n];
-        for (int i = 0; i < n; i++) {
-            sq[i] = (long) nums[i] * nums[i];
+        int max = 0;
+        int[] cnt = new int[40001];
+        long total = 0;
+
+        for (int x : nums) {
+            int a = x < 0 ? -x : x;
+            cnt[a]++;
+            total += (long) a * a;
+            if (a > max) max = a;
         }
-        java.util.Arrays.sort(sq);
-        //System.out.println(Arrays.toString(sq));
-        int neg = n / 2;
-        long result = 0;
-        for (int i = 0; i < n; i++) {
-            if (i < neg){
-                result -= sq[i];
-            } 
-            else{
-                result += sq[i];
-            }         
-               
+
+        int neg = nums.length / 2;
+        long small = 0;
+
+        for (int v = 0; v <= max && neg > 0; v++) {
+            int c = cnt[v];
+            if (c == 0) continue;
+            int take = Math.min(c, neg);
+            small += (long) v * v * take;
+            neg -= take;
         }
-        return result;
+
+        return total - 2 * small;
     }
 }
